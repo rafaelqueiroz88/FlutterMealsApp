@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../mocks/categories_mock.dart';
 import '../widgets/meal_item.dart';
 
+// Category Meals
 class CategoryMeals extends StatelessWidget {
   static const routeName = '/category-meals';
   // final String categoryId;
@@ -27,6 +28,7 @@ class CategoryMeals extends StatelessWidget {
       body: ListView.builder(
         itemBuilder: (con, index) {
           return MealItem(
+            id: categoryMeals[index].id,
             title: categoryMeals[index].title,
             imageUrl: categoryMeals[index].imageUrl,
             duration: categoryMeals[index].duration,

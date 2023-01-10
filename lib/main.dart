@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import './views/categories.dart';
 import './views/category_meals.dart';
+import './views/meal_details.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,6 +39,25 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const Categories(),
         CategoryMeals.routeName: (context) => const CategoryMeals(),
+        MealDetails.routeName: (context) => const MealDetails(),
+      },
+      // if you try to access an unknow route, it will return this route as default
+      onGenerateRoute: (settings) {
+        /**
+         * this could be used to customize routes
+         *
+         * if (settings.name == '/some-route') {
+         *   return ...;
+         * } else {
+         *   return ...;
+         * }
+         */
+        return MaterialPageRoute(builder: (con) => const CategoryMeals());
+      },
+      // if a route fail to build, it will run this
+      // is recommend to use a custom page to tells user that an error occurs
+      onUnknownRoute: (settings) {
+        return MaterialPageRoute(builder: (con) => const CategoryMeals());
       },
     );
   }
