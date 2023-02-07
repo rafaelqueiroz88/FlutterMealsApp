@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../mocks/categories_mock.dart';
 import '../models/meal.dart';
 import '../widgets/meal_item.dart';
 

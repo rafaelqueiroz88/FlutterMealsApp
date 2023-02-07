@@ -4,7 +4,6 @@ import 'mocks/categories_mock.dart';
 import 'models/meal.dart';
 import './views/tabs.dart';
 import './views/filters.dart';
-import './views/categories.dart';
 import './views/category_meals.dart';
 import './views/meal_details.dart';
 
