@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'mocks/categories_mock.dart';
+import 'models/meal.dart';
+import './views/tabs.dart';
+import './views/filters.dart';
 import './views/categories.dart';
 import './views/category_meals.dart';
 import './views/meal_details.dart';
@@ -8,8 +12,46 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Map<String, bool> _filters = {
+    'gluten': false,
+    'lactose': false,
+    'vegan': false,
+    'vegetarian': false,
+  };
+
+  List<Meal> _availableMeals = mockedMeals;
+
+  void _setFilters(Map<String, bool> filterData) {
+    setState(() {
+      _filters = filterData;
+
+      // ! sign at the end will test if true also not null
+      _availableMeals = mockedMeals.where((meal) {
+        if (_filters['gluten']! && !meal.isGlutenFree) {
+          return false;
+        }
+        if (_filters['lactose']! && !meal.isLactoseFree) {
+          return false;
+        }
+        if (_filters['vegan']! && !meal.isVegan) {
+          return false;
+        }
+        if (_filters['vegetarian']! && !meal.isVegetarian) {
+          return false;
+        }
+
+        return true;
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +79,10 @@ class MyApp extends StatelessWidget {
       ),
       // home: const Categories(),
       routes: {
-        '/': (context) => const Categories(),
-        CategoryMeals.routeName: (context) => const CategoryMeals(),
+        '/': (context) => const Tabs(),
+        CategoryMeals.routeName: (context) => CategoryMeals(_availableMeals),
         MealDetails.routeName: (context) => const MealDetails(),
+        Filters.routeName: (context) => Filters(_filters, _setFilters),
       },
       // if you try to access an unknow route, it will return this route as default
       onGenerateRoute: (settings) {
@@ -52,12 +95,14 @@ class MyApp extends StatelessWidget {
          *   return ...;
          * }
          */
-        return MaterialPageRoute(builder: (con) => const CategoryMeals());
+        return MaterialPageRoute(
+            builder: (con) => CategoryMeals(_availableMeals));
       },
       // if a route fail to build, it will run this
       // is recommend to use a custom page to tells user that an error occurs
       onUnknownRoute: (settings) {
-        return MaterialPageRoute(builder: (con) => const CategoryMeals());
+        return MaterialPageRoute(
+            builder: (con) => CategoryMeals(_availableMeals));
       },
     );
   }
