@@ -5,7 +5,10 @@ import '../mocks/categories_mock.dart';
 class MealDetails extends StatelessWidget {
   static const routeName = '/meal-details';
 
-  const MealDetails({super.key});
+  final void Function(String)? toggleFavorite;
+  final Function isFavorite;
+
+  const MealDetails(this.toggleFavorite, this.isFavorite, {super.key});
 
   Widget buildSectionTitle(BuildContext context, String text) {
     return Container(
@@ -92,10 +95,9 @@ class MealDetails extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.delete),
-        onPressed: () {
-          Navigator.of(context).pop(mealId);
-        },
+        // use ! sign right after function to avoid possible null value
+        onPressed: () => toggleFavorite!(mealId),
+        child: Icon(isFavorite(mealId) ? Icons.star : Icons.star_border),
       ),
     );
   }

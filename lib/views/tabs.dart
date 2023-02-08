@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
 
+import '../models/meal.dart';
 import './main_drawer.dart';
 import './categories.dart';
 import './favorites.dart';
 
 class Tabs extends StatefulWidget {
-  const Tabs({super.key});
+  final List<Meal> favoriteMeals;
+
+  const Tabs(this.favoriteMeals, {super.key});
 
   @override
   State<Tabs> createState() => _TabsState();
 }
 
 class _TabsState extends State<Tabs> {
-  final List<Map<String, Object>> _tabs = [
-    {'tab': const Categories(), 'title': 'Categories'},
-    {'tab': const Favorites(), 'title': 'Your Favorites'},
-  ];
+  late List<Map<String, Object>> _tabs;
   int _selectedTabIndex = 0;
+
+  @override
+  void initState() {
+    _tabs = [
+      {'tab': const Categories(), 'title': 'Categories'},
+      {'tab': Favorites(widget.favoriteMeals), 'title': 'Your Favorites'},
+    ];
+
+    super.initState();
+  }
 
   void _selectedTab(int index) {
     setState(() {

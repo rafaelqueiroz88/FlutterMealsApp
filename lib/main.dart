@@ -27,6 +27,7 @@ class _MyAppState extends State<MyApp> {
   };
 
   List<Meal> _availableMeals = mockedMeals;
+  List<Meal> _favoriteMeals = [];
 
   void _setFilters(Map<String, bool> filterData) {
     setState(() {
@@ -50,6 +51,25 @@ class _MyAppState extends State<MyApp> {
         return true;
       }).toList();
     });
+  }
+
+  void _toggleFavorite(String mealId) {
+    final existingIndex =
+        _favoriteMeals.indexWhere((meal) => meal.id == mealId);
+
+    if (existingIndex >= 0) {
+      setState(() {
+        _favoriteMeals.removeAt(existingIndex);
+      });
+    } else {
+      setState(() {
+        _favoriteMeals.add(mockedMeals.firstWhere((meal) => meal.id == mealId));
+      });
+    }
+  }
+
+  bool _isMealFavorite(String id) {
+    return _favoriteMeals.any((meal) => meal.id == id);
   }
 
   @override
@@ -78,9 +98,10 @@ class _MyAppState extends State<MyApp> {
       ),
       // home: const Categories(),
       routes: {
-        '/': (context) => const Tabs(),
+        '/': (context) => Tabs(_favoriteMeals),
         CategoryMeals.routeName: (context) => CategoryMeals(_availableMeals),
-        MealDetails.routeName: (context) => const MealDetails(),
+        MealDetails.routeName: (context) =>
+            MealDetails(_toggleFavorite, _isMealFavorite),
         Filters.routeName: (context) => Filters(_filters, _setFilters),
       },
       // if you try to access an unknow route, it will return this route as default
